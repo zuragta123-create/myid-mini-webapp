@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WELCOME MyidMini</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+body{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+input,textarea{-webkit-user-select:text;-moz-user-select:text;-ms-user-select:text;user-select:text}
+.container{background:linear-gradient(135deg,#e9ecef 0%,#ffffff 100%) !important;box-shadow:inset 0 0 50px rgba(255,255,255,.6),0 20px 40px rgba(0,0,0,.05) !important;width:100% !important;height:100vh !important;padding:20px !important;margin:0 !important;border-radius:0 !important;position:relative !important;overflow:auto !important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.container:hover{transform:none !important}
+h1{color:#333;margin-bottom:10px;font-weight:600}
+.subtitle{color:#666;margin-bottom:30px;font-size:16px}
+.input-group{margin-bottom:25px;text-align:left}
+label{display:block;margin-bottom:8px;color:#555;font-weight:500}
+.input-container{position:relative;display:flex;align-items:center}
+.token-input{width:100%;padding:15px 15px 15px 45px;border:2px solid #e1e5ee;border-radius:10px;font-size:16px;transition:all .3s;outline:none}
+.token-input:focus{border-color:#2575fc;box-shadow:0 0 0 3px rgba(37,117,252,.1)}
+.input-icon{position:absolute;left:15px;color:#6a11cb;font-size:18px}
+.container div{border-left:none !important}
+.toggle-visibility{position:absolute;right:15px;background:none;border:none;color:#666;cursor:pointer;font-size:18px}
+.btn{background:linear-gradient(to right,#6a11cb,#2575fc);color:#fff;border:none;border-radius:10px;padding:15px 30px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s;width:100%;display:flex;justify-content:center;align-items:center;gap:10px;position:relative;height:50px;min-height:50px}
+.btn .btn-text{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;white-space:nowrap}
+.message{margin-top:20px;padding:12px;border-radius:8px;font-size:14px;display:none}
+.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+.info{margin-top:20px;font-size:14px;color:#666;text-align:left;background:#f8f9fa;padding:15px;border-radius:8px;border-left:4px solid #d63384}
+.login-tabs{display:flex;margin-bottom:25px;border-radius:10px;background:#f8f9fa;padding:5px}
+.tab-btn{flex:1;padding:12px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-weight:500;transition:all .3s;color:#666}
+.tab-btn.active{background:#fff;color:#d63384;box-shadow:0 2px 5px rgba(0,0,0,.1)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.otp-timer{text-align:center;margin:10px 0;font-size:14px;color:#666}
+.otp-timer.expiring{color:#dc3545;font-weight:600}
+.resend-otp{background:none;border:none;color:#d63384;cursor:pointer;font-size:14px;text-decoration:underline;margin-top:10px}
+.resend-otp:disabled{color:#999;cursor:not-allowed}
+.spinner{display:none;width:20px;height:20px;border:3px solid rgba(255,255,255,.3);border-radius:50%;border-top-color:#fff;animation:spin 1s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .spinner{display:inline-block}
+.loading .btn-text{display:none}
+.data-screen{display:none}
+.account-card{background:#fff;border-radius:15px;box-shadow:0 3px 10px rgba(0,0,0,.1);padding:15px;margin-bottom:8px;text-align:left;border-left:5px solid #d63384}
+.account-card{margin-bottom:8px !important}
+.member-card{margin-bottom:8px !important}
+.button-group{margin-top:8px !important;gap:12px !important}
+.account-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #eee}
+.header-left{display:flex;align-items:center;gap:8px}
+.msisdn{font-weight:600;color:#333;font-size:18px}
+.mytel-badge{background:#d63384;color:#fff;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:600;border:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.balance-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:0}
+.balance-item{background:#f8f9fa;padding:15px;border-radius:10px;text-align:center;width:100%}
+.balance-name{font-size:14px;color:#666;margin-bottom:5px}
+.balance-amount{font-size:18px;font-weight:700;color:#d63384}
+.balance-unit{font-size:14px;color:#888}
+.button-group{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-top:25px}
+.logout-btn,.play-btn,.history-btn,.exchange-btn{background:#fff;color:#000;border:none;border-radius:16px;padding:16px 0;font-size:13px;font-weight:600;cursor:pointer;width:100%;height:80px;box-shadow:0 2px 7px rgba(0,0,0,.1);transition:all .3s ease}
+.logout-btn:hover,.play-btn:hover,.history-btn:hover,.exchange-btn:hover{transform:translateY(-2px);box-shadow:0 2px 7px rgba(0,0,0,.15)}
+.back-btn{background:#f8f9fa;color:#666;border:1px solid #ddd;border-radius:10px;padding:10px 20px;font-size:14px;cursor:pointer;margin-top:10px;transition:all .3s}
+.back-btn:hover{background:#e9ecef}
+.play-screen{display:none}
+.play-screen-ready .init-section{display:none !important}
+.status-display{background:#f8f9fa;border-radius:10px;padding:15px;margin:20px 0;text-align:left;border-left:4px solid #d63384}
+.status-label{font-size:14px;color:#666;margin-bottom:5px}
+.status-value{font-size:16px;font-weight:600}
+.status-ready{color:#28a745}
+.status-loading{color:#ffc107}
+.status-error{color:#dc3545}
+.phone-input{width:100%;padding:15px;border:2px solid #e1e5ee;border-radius:10px;font-size:16px;margin-bottom:0px;transition:all .3s;outline:none}
+.phone-input:focus{border-color:#d63384;box-shadow:0 0 0 3px rgba(214,51,132,.1)}
+.player-info{background:#fff;border-radius:15px;box-shadow:0 2px 7px rgba(0,0,0,.1);padding:15px;margin:15px 0;text-align:left;border-left:5px solid #d63384;max-height:225px;overflow:hidden}
+.player-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #eee}
+.player-msisdn{font-weight:600;color:#333;font-size:18px}
+.player-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.player-header .back-compact{background:#fff;color:#000;border:none;border-radius:30px;padding:8px 14px;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.08);cursor:pointer;display:flex;align-items:center;gap:8px}
+.stat-item{background:#f8f9fa;padding:8px;border-radius:10px;text-align:center}
+.stat-name{font-size:10px;color:#666;margin-bottom:5px}
+.stat-value{font-size:15px;font-weight:700;color:#d63384}
+.button-container{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  align-items:stretch !important;
+  gap:12px !important;
+  background:#fff !important;
+  border-radius:15px !important;
+  box-shadow:0 2px 5px rgba(0,0,0,.1) !important;
+  padding:15px !important;
+  margin-bottom:8px !important;
+  text-align:center !important;
+  border-left:none !important;
+}
+.button-container::before{border:none !important;}
+#heartToDia,
+#diaToTurn{
+  width:100% !important;
+  min-width:0 !important;
+  height:90px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  text-align:center !important;
+  background:#f2f2f2 !important;
+  border-radius:12px !important;
+  box-shadow:none !important;
+  color:#777 !important;
+}
+#heartToDia .btn-icon,
+#diaToTurn .btn-icon{
+  font-size:24px !important;
+  color:#aaa !important;
+  transition:all .3s ease !important;
+}
+#startAutoBtn{
+  grid-column:1 / -1 !important;
+  width:100% !important;
+  min-width:0 !important;
+  margin-top:-10px !important;
+  margin-bottom:1px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  height:50px !important;
+  gap:6px !important;
+  text-align:center !important;
+  background:#f2f2f2 !important;
+  color:#555 !important;
+  border:none !important;
+  border-radius:12px !important;
+  transition:all .25s ease !important;
+}
+#startAutoBtn.success{
+  background:linear-gradient(to right,#28a745,#3bd27f) !important;
+  color:#fff !important;
+  box-shadow:0 3px 10px rgba(56,183,73,.25) !important;
+}
+#startAutoBtn.success:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(56,183,73,.35) !important;
+}
+#heartToDia.success .btn-icon{color:#ff6b6b !important;}
+#diaToTurn.success .btn-icon{color:#00bfa5 !important;}
+#heartToDia.success,
+#diaToTurn.success{color:#111 !important;}
+#heartToDia .btn-text,
+#diaToTurn .btn-text,
+#startAutoBtn .btn-text{
+  display:block !important;
+  line-height:1.3 !important;
+  font-size:14px !important;
+}
+.game-btn{background:rgba(255,255,255,.9);color:#333;border:none;border-radius:12px;padding:16px 20px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s ease;display:flex;align-items:center;justify-content:flex-start;gap:15px;box-shadow:0 2px 8px rgba(0,0,0,.1);position:relative;overflow:hidden;width:100%;margin-bottom:12px}
+.game-btn:hover{transform:translateY(-2px);box-shadow:0 2px 8px rgba(0,0,0,.15);background:rgba(255,255,255,.95)}
+.game-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);transition:.5s}
+.game-btn:hover::before{left:100%}
+.btn-icon{font-size:20px;width:30px;text-align:center}
+.btn-text{display:flex;flex-direction:column;align-items:flex-start;line-height:1.3;flex:1}
+.btn-main-text{font-size:16px;font-weight:700;color:#333}
+.btn-sub-text{font-size:13px;font-weight:500;color:#666}
+.htd-btn .btn-icon{color:#ff6b6b}
+.dtt-btn .btn-icon{color:#4ecdc4}
+.back-btn .btn-icon{color:#a8a8a8}
+.auto-btn .btn-icon{color:#ffd93d}
+.auto-btn{border-radius:35px;height:50px;min-height:50px;padding:0 20px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.9);color:#333;border:none;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 1px 1px rgba(0,0,0,.1);position:relative;overflow:hidden;width:100%;margin-bottom:12px;box-sizing:border-box;gap:10px;text-align:center}
+.auto-btn .btn-text{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.3}
+.auto-btn .btn-icon{font-size:20px;text-align:center}
+.game-btn:disabled{background:rgba(255,255,255,.6);color:#999;cursor:not-allowed;transform:none;box-shadow:0 1px 1px rgba(0,0,0,.1)}
+.game-btn:disabled::before{display:none}
+.stats-display{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;display:none}
+.stat-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+  padding: 12px 14px !important;
+  border-left: 4px solid #d63384;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: auto !important;
+  height: 45px !important;
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
+}
+
+.stat-icon {
+  font-size: 15px !important;
+  margin-bottom: 0 !important;
+  flex-shrink: 0 !important;
+  width: 18px !important;
+  text-align: center !important;
+}
+
+.stat-data .stat-icon { color: #28a745; }
+.stat-point .stat-icon { color: #ffc107; }
+.stat-voice .stat-icon { color: #d63384; }
+
+.stat-content {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: baseline !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 4px !important;
+  height: 100% !important;
+}
+
+.stat-label {
+  font-size: 11px !important;
+  color: #666;
+  margin-bottom: 0 !important;
+  line-height: 1.2 !important;
+  display: inline-block !important;
+}
+
+.stat-value {
+  font-size: 16px !important;
+  font-weight: 700;
+  line-height: 1.2 !important;
+  margin-bottom: 0 !important;
+  display: inline-block !important;
+}
+
+.stat-data .stat-value { color: #28a745; }
+.stat-point .stat-value { color: #ffc107; }
+.stat-voice .stat-value { color: #d63384; }
+
+.stat-unit {
+  font-size: 12px;
+  color: #888;
+  margin-left: 2px;
+  line-height: 1.2;
+}
+.game-log {
+  position: relative;
+  border-radius: 18px;
+  padding: 20px 16px 32px 16px !important;
+  margin: 25px 0;
+  text-align: left;
+  max-height: 400px;
+  min-height: 250px;
+  height: 350px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, .15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+
+.game-log::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  border-radius: 18px;
+  border: 1px solid rgba(244, 143, 177, 1);
+  pointer-events: none;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px !important;
+}
+
+.log-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.log-clear {
+  background: transparent;
+  color: #000;
+  border: 2px solid #28a745;
+  border-radius: 20px;
+  padding: 6px 15px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .3s ease;
+}
+
+.log-clear:hover {
+  transform: translateY(-1px);
+  border: 2px solid #34ce57;
+}
+
+.log-content {
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  max-height: 320px;
+  height: 320px;
+  overflow-y: scroll;
+  flex-grow: 1;
+  scroll-behavior: smooth;
+  padding-top: 8px !important;
+  padding-bottom: 50px !important;
+  scrollbar-width: none;
+}
+
+.log-content::-webkit-scrollbar {
+  display: none;
+}
+
+.log-content p:last-child {
+  margin-bottom: 10px !important;
+}
+.log-item{margin-bottom:5px}
+.log-success{color:#28a745}
+.log-error{color:#dc3545}
+.log-info{color:#17a2b8}
+#tokenScreen,#dataScreen,#playScreen,#historyScreen .account-card{background:transparent;box-shadow:none;border:none;padding:0}
+#historyScreen .history-top{display:flex;align-items:center;gap:10px;margin:6px 0 12px 0;padding:0;border:none}
+#historyScreen .back-compact{background:#fff;color:#000;border:none;border-radius:30px;padding:8px 14px;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.08);cursor:pointer}
+#historyScreen .history-top .msisdn{font-weight:700;font-size:18px;color:#333}
+#historyMsisdn{display:none}
+#fetchTokenBtn{background:linear-gradient(to right,#28a745,#6fcf97) !important;color:#fff !important;display:flex !important;align-items:center !important;justify-content:center !important;text-align:center !important}
+#fetchTokenBtn .btn-text{display:flex !important;align-items:center !important;justify-content:center !important;width:100% !important;text-align:center !important}
+#startAutoBtn.auto-btn-stop{background:linear-gradient(to right,#dc3545,#e4606d) !important;color:#fff !important;border:none !important}
+#startAutoBtn.auto-btn-stop:hover{background:linear-gradient(to right,#c82333,#dc3545) !important;transform:translateY(-2px);box-shadow:0 2px 8px rgba(220,53,69,.3) !important}
+#fetchTokenBtn,#statusDisplay{display:none !important}
+.segmented{display:flex;gap:10px;margin-bottom:15px}
+.seg-btn{flex:1;background:#fff;border:1px solid #ddd;border-radius:12px;padding:12px 10px;font-weight:700;cursor:pointer}
+.seg-btn.active{border-color:#d63384;color:#d63384;background:#fff}
+.history-list{display:flex;flex-direction:column;gap:12px}
+.history-card{background:#fff;border:1px solid #DDDDDD;border-radius:16px;padding:16px}
+.history-row{display:flex;justify-content:space-between;align-items:flex-start}
+.history-title{font-weight:700;color:#000}
+.history-amount.earn{color:#4CAF50;font-weight:700}
+.history-amount.burn{color:#e53935;font-weight:700}
+.history-date{margin-top:8px;color:#888;font-size:13px}
+#exchangeScreen{display:none}
+.ex-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ex-head .back-compact{background:#fff;border:none;border-radius:30px;padding:8px 14px;box-shadow:0 2px 6px rgba(0,0,0,.08);cursor:pointer}
+.ex-title{margin-left:auto;background:#ff9800;color:#fff;border-radius:20px;padding:7px 8px;font-weight:700}
+.ex-tabs{display:flex;gap:10px;margin:10px 0 16px}
+.ex-tab{flex:1;background:#fff;border:1px solid #ddd;border-radius:14px;padding:12px 10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.ex-tab.active{border-color:#6a11cb;color:#6a11cb}
+.pack-list{display:flex;flex-direction:column;gap:12px}
+.pack-card{display:flex;align-items:center;gap:14px;background:#f5eaff;border:1px solid #e5d7ff;border-radius:18px;padding:16px}
+.pack-ic{width:46px;height:46px;border-radius:50%;background:#6a44ff;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px}
+.pack-info{flex:1}
+.pack-name{font-weight:800;color:#1e1e1e;font-size:18px}
+.pack-sub{color:#666;font-size:13px;margin-top:4px}
+.pack-price{background:#5e3ecf;color:#fff;border-radius:12px;padding:10px 14px;font-weight:800}
+.pack-price small{font-weight:600;opacity:.9}
+#confirmOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:999}
+#confirmBox{display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:calc(100% - 40px);max-width:520px;background:#fff;border-radius:18px;box-shadow:0 15px 30px rgba(0,0,0,.15);z-index:1000;padding:18px}
+.c-title{font-weight:800;color:#222;margin-bottom:10px}
+.c-sub{color:#555;line-height:1.5;margin-bottom:14px}
+.c-trio{display:flex;gap:10px;margin-bottom:14px}
+.c-chip{flex:1;background:#f5f5f5;border-radius:12px;padding:10px 12px;text-align:center;font-weight:700}
+.c-actions{display:flex;gap:10px}
+.c-btn{flex:1;border-radius:12px;padding:12px 10px;font-weight:800;cursor:pointer;text-align:center}
+.c-cancel{background:#f4f4f4;color:#333}
+.c-ok{background:#6a44ff;color:#fff}
+#resultOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1099}
+#resultBox{display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:calc(100% - 40px);max-width:420px;background:#fff;border-radius:16px;box-shadow:0 15px 30px rgba(0,0,0,.15);z-index:1100;padding:18px;text-align:center}
+.r-title{font-weight:800;margin-bottom:8px}
+.r-msg{color:#444;margin-bottom:14px}
+.r-ok{display:inline-block;background:#6a44ff;color:#fff;border-radius:10px;padding:10px 16px;font-weight:800;cursor:pointer}
+.r-ok.error{background:#e53935}
+.member-card{margin-top:6px;width:100%;border-radius:18px;background:linear-gradient(135deg,#ff6b6b 0%,#e53935 100%);color:#fff;padding:16px;box-shadow:0 4px 15px rgba(229,57,53,.25)}
+.member-head{display:flex;align-items:center;justify-content:center;gap:10px;font-size:18px;font-weight:800;margin-bottom:12px}
+.member-head .star{background:#ffffff22;border:2px solid #ffffff55;color:#fff;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.member-progress-wrap{width:100%;height:7px;border-radius:10px;background:#ffffff66;overflow:hidden;margin:10px 0 14px}
+.member-progress{height:100%;width:0;border-radius:10px;background:#2ecc71;transition:width .5s ease}
+.member-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.member-left{font-size:14px;font-weight:700;opacity:.95}
+.member-right{font-size:14px;font-weight:800}
+.member-right .exchanged{color:#2ecc71}
+.member-right .limit{color:#fff}
+.member-right .extended{color:#ffeb3b}
+.claim-btn{background:#d63384;color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.claim-btn .spinner-mini{display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}
+.claim-btn.loading{opacity:.75;pointer-events:none}
+.claim-btn.loading .spinner-mini{display:inline-block}
+
+#dttOverlay{display:none;position:fixed;inset:0;background:rgba(200,200,200,.9);z-index:1200}
+#dttBox{display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:calc(100% - 40px);max-width:520px;background:#fff;border-radius:18px;box-shadow:0 15px 30px rgba(0,0,0,.12);z-index:1210;padding:18px}
+.dtt-title{font-weight:800;color:#222;margin-bottom:4px;text-align:center}
+.dtt-sub{color:#555;text-align:center;margin-bottom:14px}
+.dtt-row{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0}
+.dtt-chip{flex:1;background:#f5f5f5;border-radius:12px;padding:12px 10px;text-align:center;font-weight:800}
+.dtt-ctrl{display:flex;align-items:center;justify-content:center;gap:12px}
+.dtt-btn{width:46px;height:46px;border-radius:12px;border:none;background:#f1f3f5;font-size:20px;font-weight:900;cursor:pointer}
+.dtt-btn:active{transform:scale(.97)}
+.dtt-exchange{display:block;width:100%;border:none;border-radius:12px;padding:14px 12px;font-weight:900;letter-spacing:.2px;cursor:pointer;background:linear-gradient(90deg,#4ecdc4,#2575fc);color:#fff;margin-top:10px}
+.dtt-exchange.loading{opacity:.8;pointer-events:none}
+
+.prize-ic{height:18px;width:auto;vertical-align:-3px;margin:0 4px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div id="tokenScreen">
+    <h1>WELCOME MyidMini</h1>
+    <p class="subtitle">Login Your Account</p>
+    <div class="login-tabs">
+      <button class="tab-btn active" data-tab="token-tab">Key Login</button>
+      <button class="tab-btn" data-tab="otp-tab">Phone/OTP Login</button>
+    </div>
+    <div id="token-tab" class="tab-content active">
+      <div class="input-group">
+        <label for="token">Authentication Key</label>
+        <div class="input-container">
+          <i class="fas fa-key input-icon"></i>
+          <input type="password" id="token" class="token-input" placeholder="Enter Your Key">
+          <button type="button" class="toggle-visibility" id="toggleVisibility"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      <button id="startBtn" class="btn"><div class="spinner"></div><span class="btn-text">Login Account</span></button>
+    </div>
+    <div id="otp-tab" class="tab-content">
+      <div class="input-group">
+        <label for="phoneNumberLogin">Phone Number</label>
+        <div class="input-container">
+          <i class="fas fa-phone input-icon"></i>
+          <input type="tel" id="phoneNumberLogin" class="token-input" placeholder="Enter your phone">
+        </div>
+      </div>
+      <div id="otpSection" style="display:none;">
+        <div class="input-group">
+          <label for="otpCode">OTP Code</label>
+          <div class="input-container">
+            <i class="fas fa-sms input-icon"></i>
+            <input type="text" id="otpCode" class="token-input" placeholder="Enter OTP Code" maxlength="6">
+          </div>
+        </div>
+      </div>
+      <button id="sendOtpBtn" class="btn"><div class="spinner"></div><span class="btn-text" id="otpBtnText">SEND OTP</span></button>
+      <button id="verifyOtpBtn" class="btn" style="display:none;margin-top:10px;"><div class="spinner"></div><span class="btn-text">Verify OTP</span></button>
+    </div>
+    <div id="message" class="message"></div>
+  </div>
+
+  <div id="dataScreen" class="data-screen">
+    <div id="accountsContainer"></div>
+    <div class="button-group">
+      <div id="memberCard" class="member-card" style="display:none; grid-column:1 / -1;">
+        <div class="member-head">
+          <span class="star"><i class="fas fa-star"></i></span>
+          <span id="memberTitle">Member</span>
+          <span class="star"><i class="fas fa-star"></i></span>
+        </div>
+        <div class="member-progress-wrap"><div id="memberProgress" class="member-progress"></div></div>
+        <div class="member-row">
+          <div class="member-left"><span id="memberPoint">0</span> Point</div>
+          <div class="member-right" id="memberExchangeText"><span class="exchanged">0</span>/<span class="limit">0</span>(<span class="extended">+0</span>)</div>
+        </div>
+      </div>
+      <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Account Logout</button>
+      <button class="exchange-btn"><i class="fas fa-coins"></i> Point Exchange</button>
+      <button id="playBtn" class="play-btn"><i class="fas fa-play"></i> Infinity Ou Game</button>
+      <button class="history-btn"><i class="fas fa-clock-rotate-left"></i> Point History</button>
+    </div>
+  </div>
+
+  <div id="playScreen" class="play-screen play-screen-init">
+    <div class="input-group init-section">
+      <label for="phoneNumber">Phone Number</label>
+      <input type="text" id="phoneNumber" class="phone-input" placeholder="Enter phone number (e.g., 09666666666)">
+    </div>
+    <button id="fetchTokenBtn" class="btn init-section"><div class="spinner"></div><span class="btn-text">Initialize System</span></button>
+    <div id="playMessage" class="message"></div>
+    <div id="statusDisplay" class="status-display init-section">
+      <div class="status-label">System Status:</div>
+      <div class="status-value" id="systemStatus">Not initialized</div>
+    </div>
+    <div id="playerInfo" class="player-info" style="display:none;">
+      <div class="player-header">
+        <div class="ph-left" style="display:flex;align-items:center;gap:10px">
+          <button id="backToDataTop" class="back-compact"><i class="fas fa-arrow-left"></i> Back</button>
+          <div class="player-msisdn" id="playerMsisdn">-</div>
+        </div>
+        <div class="mytel-badge">Game Info</div>
+      </div>
+      <div class="player-stats">
+        <div class="stat-item"><div class="stat-name">အသဲ</div><div class="stat-value" id="goldenHeart">-</div></div>
+        <div class="stat-item"><div class="stat-name">ကစားကြိမ်</div><div class="stat-value" id="totalTurn">-</div></div>
+        <div class="stat-item"><div class="stat-name">ကစားရန်ကျန်ရှိကြိမ်</div><div class="stat-value" id="remainTurn">-</div></div>
+        <div class="stat-item"><div class="stat-name">စိန်</div><div class="stat-value" id="diamond">-</div></div>
+      </div>
+    </div>
+    <div class="button-container">
+      <button id="heartToDia" class="game-btn htd-btn" disabled><i class="fas fa-heart btn-icon"></i><div class="btn-text">အသဲဖြင့်စိန်လဲရန်</div><div class="spinner"></div></button>
+      <button id="diaToTurn" class="game-btn dtt-btn" disabled><i class="fas fa-gem btn-icon"></i><div class="btn-text">စိန်ဖြင့်ကစားကြိမ်လဲရန်</div><div class="spinner"></div></button>
+      <button id="startAutoBtn" class="game-btn auto-btn" disabled><i class="fas fa-robot btn-icon"></i><div class="btn-text"><span class="btn-main-text">Auto</span><span class="btn-sub-text">Play</span></div><div class="spinner"></div></button>
+    </div>
+    <div id="statsDisplay" class="stats-display">
+      <div class="stat-card stat-data"><div class="stat-icon"><i class="fas fa-database"></i></div><div class="stat-value">0<span class="stat-unit">MB</span></div></div>
+      <div class="stat-card stat-point"><div class="stat-icon"><i class="fas fa-trophy"></i></div><div class="stat-value">0<span class="stat-unit">PTS</span></div></div>
+      <div class="stat-card stat-voice"><div class="stat-icon"><i class="fas fa-phone"></i></div><div class="stat-value">0<span class="stat-unit">MIN</span></div></div>
+    </div>
+    <div id="gameLog" class="game-log" style="display:none;">
+      <div class="log-header"><div class="log-title">Game Log</div><button class="log-clear" id="clearLog">Clear</button></div>
+      <div class="log-content" id="logContent"></div>
+    </div>
+  </div>
+
+  <div id="historyScreen" style="display:none;">
+    <div class="history-top">
+      <button id="backToHome" class="back-compact"><i class="fas fa-arrow-left"></i> Back</button>
+      <div class="msisdn" id="historyMsisdn">-</div>
+      <div class="ex-title">Point History</div>
+    </div>
+    <div class="segmented">
+      <button id="btnEarn" class="seg-btn active">ရရှိသောပွိုင့်</button>
+      <button id="btnBurn" class="seg-btn">သုံးစွဲသောပွိုင့်</button>
+    </div>
+    <div id="historyList" class="history-list"></div>
+  </div>
+
+  <div id="exchangeScreen">
+    <div class="ex-head">
+      <button id="exBack" class="back-compact"><i class="fas fa-arrow-left"></i> Back</button>
+      <div class="ex-title">Point Exchange</div>
+    </div>
+    <div class="ex-tabs">
+      <button id="exData" class="ex-tab active"><i class="fas fa-signal"></i> Data</button>
+      <button id="exVoice" class="ex-tab"><i class="fas fa-phone"></i> Voice</button>
+      <button id="exSms" class="ex-tab"><i class="fas fa-comment-dots"></i> SMS</button>
+    </div>
+    <div id="exchangeList" class="pack-list"></div>
+  </div>
+</div>
+
+<div id="confirmOverlay"></div>
+<div id="confirmBox">
+  <div class="c-title" id="cTitle">Confirm</div>
+  <div class="c-sub" id="cSub">-</div>
+  <div class="c-trio">
+    <div class="c-chip" id="cDuration">7 day</div>
+    <div class="c-chip" id="cPrice">-</div>
+    <div class="c-chip" id="cPack">-</div>
+  </div>
+  <div class="c-actions">
+    <div class="c-btn c-cancel" id="confirmCancel">မလုပ်တော့</div>
+    <div class="c-btn c-ok" id="confirmOk">အတည်ပြုမည်</div>
+  </div>
+</div>
+
+<div id="resultOverlay"></div>
+<div id="resultBox">
+  <div class="r-title" id="rTitle">Result</div>
+  <div class="r-msg" id="rMsg">-</div>
+  <div class="r-ok" id="rOk">OK</div>
+</div>
+
+
+<div id="dttOverlay"></div>
+<div id="dttBox">
+  <div class="dtt-title"><i class="fas fa-gem"></i> စိန်ဖြင့်ကစားကြိမ်လဲရန်</div>
+  <div class="dtt-sub">စိန် <span id="dttDiamond">200</span> / ကစားခွင့် <span id="dttTurns">5</span></div>
+  <div class="dtt-row">
+    <div class="dtt-chip">စိန် <span id="dttDiamondChip">200</span></div>
+    <div class="dtt-chip">ကစားခွင့် <span id="dttTurnsChip">5</span></div>
+  </div>
+  <div class="dtt-ctrl">
+    <button id="dttMinus" class="dtt-btn">-</button>
+    <button id="dttPlus" class="dtt-btn">+</button>
+  </div>
+  <button id="dttExchange" class="dtt-exchange"><i class="fas fa-right-left"></i> Exchange</button>
+</div>
+
+
+<div id="gatewayScriptContainer"></div>
+
+<script>
+const tg=window.Telegram?.WebApp;
+let otpTimer=null,otpExpiryTime=null,otpRequestId=null;
+let gameState={isAutoRunning:false,sessionId:null,msisdn:null,t1:null,t2:null,bossId:null,wave:0,score:0,playerInfo:null,data:0,point:0,voice:0};
+let worldModeBlocked = false;
+function formatMsisdn(raw){if(!raw)return"";const c=String(raw).trim();if(c.startsWith('+959'))return c;if(c.startsWith('09'))return '+95'+c.slice(1);return c}
+let pendingCode=null;
+
+function isApiSuccess(d,res){
+  if (!d) return false;
+  if (d.success === true) return true;
+  if (typeof d.success === 'string' && d.success.toLowerCase() === 'true') return true;
+  if (d.errorCode === 0 || d.errorCode === '00000') return true;
+  if (typeof d.status === 'string' && d.status.toUpperCase() === 'SUCCESS') return true;
+  if (typeof d.message === 'string' && d.message.toLowerCase().includes('success')) return true;
+  return false;
+}
+
+function openConfirm(code,title,duration,price,packText){pendingCode=code;document.getElementById('cTitle').textContent=title;document.getElementById('cSub').textContent='လူကြီးမင်းသည် 7ရက်သက်တမ်းရှိသော '+packText+' ကို '+price+' ဖြင့်ပြောင်းလဲအသုံးပြုမှာသေချာပြီလား။';document.getElementById('cDuration').textContent=duration;document.getElementById('cPrice').textContent=price;document.getElementById('cPack').textContent=packText;document.getElementById('confirmOverlay').style.display='block';document.getElementById('confirmBox').style.display='block'}
+function closeConfirm(){document.getElementById('confirmOverlay').style.display='none';document.getElementById('confirmBox').style.display='none'}
+
+function openResult(ok,msg){
+  document.getElementById('rTitle').textContent= ok ? 'Successfully 🙂' : 'Unsuccessful 😐';
+  document.getElementById('rMsg').textContent= msg || (ok?'':'');
+  const okBtn=document.getElementById('rOk');
+  if(ok){okBtn.classList.remove('error')}else{okBtn.classList.add('error')}
+  document.getElementById('resultOverlay').style.display='block';
+  document.getElementById('resultBox').style.display='block'
+}
+function closeResult(){document.getElementById('resultOverlay').style.display='none';document.getElementById('resultBox').style.display='none'}
+function renderExchange(type){const list=document.getElementById('exchangeList');list.innerHTML='';const packs={DATA:[{name:'40 MB',sub:'Validity : 7 days',points:50,code:'DATA_40MB',icon:'fa-signal'},{name:'100 MB',sub:'Validity : 7 days',points:100,code:'DATA_100MB',icon:'fa-signal'},{name:'300 MB',sub:'Validity : 7 days',points:200,code:'DATA_300MB',icon:'fa-signal'},{name:'800 MB',sub:'Validity : 7 days',points:400,code:'DATA_800MB',icon:'fa-signal'},{name:'1350 MB',sub:'Validity : 7 days',points:600,code:'DATA_1350MB',icon:'fa-signal'},{name:'2000 MB',sub:'Validity : 7 days',points:800,code:'DATA_2000MB',icon:'fa-signal'},{name:'2750 MB',sub:'Validity : 7 days',points:1000,code:'DATA_2750MB',icon:'fa-signal'},{name:'22000 MB',sub:'Validity : 7 days',points:8000,code:'DATA_22000MB',icon:'fa-signal'}],VOICE:[{name:'8 MINS',sub:'Validity : 7 days',points:50,code:'VOICE_8MIN',icon:'fa-phone'},{name:'20 MINS',sub:'Validity : 7 days',points:100,code:'VOICE_20MIN',icon:'fa-phone'},{name:'60 MINS',sub:'Validity : 7 days',points:200,code:'VOICE_60MIN',icon:'fa-phone'},{name:'160 MINS',sub:'Validity : 7 days',points:400,code:'VOICE_160MIN',icon:'fa-phone'},{name:'270 MINS',sub:'Validity : 7 days',points:600,code:'VOICE_270MIN',icon:'fa-phone'},{name:'400 MINS',sub:'Validity : 7 days',points:800,code:'VOICE_400MIN',icon:'fa-phone'},{name:'550 MINS',sub:'Validity : 7 days',points:1000,code:'VOICE_550MIN',icon:'fa-phone'}],SMS:[{name:'400 SMS',sub:'Validity : 7 days',points:50,code:'SMS_400',icon:'fa-comment-dots'},{name:'1000 SMS',sub:'Validity : 7 days',points:100,code:'SMS_1000',icon:'fa-comment-dots'},{name:'3000 SMS',sub:'Validity : 7 days',points:200,code:'SMS_3000',icon:'fa-comment-dots'},{name:'8000 SMS',sub:'Validity : 7 days',points:400,code:'SMS_8000',icon:'fa-comment-dots'},{name:'13500 SMS',sub:'Validity : 7 days',points:600,code:'SMS_13500',icon:'fa-comment-dots'},{name:'20000 SMS',sub:'Validity : 7 days',points:800,code:'SMS_20000',icon:'fa-comment-dots'},{name:'27500 SMS',sub:'Validity : 7 days',points:1000,code:'SMS_27500',icon:'fa-comment-dots'}]}[type||'DATA'];packs.forEach(p=>{const card=document.createElement('div');card.className='pack-card';card.innerHTML=`<div class="pack-ic"><i class="fas ${p.icon}"></i></div><div class="pack-info"><div class="pack-name">${p.name}</div><div class="pack-sub">${p.sub}</div></div><button class="pack-price">${p.points} <small>Points</small></button>`;card.querySelector('.pack-price').addEventListener('click',()=>{openConfirm(p.code,`${p.points}Point - ${p.name}`,'7 day',`${p.points}Point`,p.name)});list.appendChild(card)})}
+async function _exchange(rewardCode){const url='https://apis.mytel.com.mm/loyalty/api/v3.1/pack/exchange';const token=localStorage.getItem('mytelToken');const accounts=JSON.parse(localStorage.getItem('mytelAccounts')||'[]');const msisdn=formatMsisdn(accounts[0]?.msisdn||'');if(!token){openResult(false,'Login token မရှိပါ');return}if(!msisdn){openResult(false,'ဖုန်းနံပါတ် မရှိပါ');return}const deviceId=(localStorage.getItem('deviceId'))||(function(){const id='web_'+Math.random().toString(36).slice(2);localStorage.setItem('deviceId',id);return id})();const body={msisdn,rewardCode,requestId:deviceId,requestTime:String(Date.now())};try{const res=await fetch(url,{method:'POST',headers:{'Authorization':`Bearer ${token}`,'access-token':token,'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(body)});const data=await res.json().catch(()=>({}));const ok=isApiSuccess(data,res);openResult(ok,data.message|| (ok?'Exchange success':'Exchange failed'));if(ok){fetchLoyaltyPoints(token)}}catch(e){openResult(false,'Network error')}}
+function showMainApp(){const savedToken=localStorage.getItem('mytelToken');if(savedToken){document.getElementById('tokenScreen').style.display='none';document.getElementById('dataScreen').style.display='block';fetchAccountData(savedToken)}else{document.getElementById('tokenScreen').style.display='block';document.getElementById('dataScreen').style.display='none'}}
+async function encryptRSA(plaintext,publicKeyBase64){return new Promise((resolve,reject)=>{try{const publicKeyPem="-----BEGIN PUBLIC KEY-----\r\n"+publicKeyBase64+"\r\n-----END PUBLIC KEY-----";const encryptor=new JSEncrypt();encryptor.setPublicKey(publicKeyPem);const encrypted=encryptor.encrypt(plaintext);if(encrypted)resolve(encrypted);else reject(new Error("Encryption failed - possibly invalid public key"))}catch(error){reject(error)}})}
+function updateSystemStatus(message, status) {
+  const a = document.getElementById('systemStatus');
+  const b = document.getElementById('statusDisplay');
+  const autoBtn = document.getElementById('startAutoBtn');
+  const heartBtn = document.getElementById('heartToDia');
+  const diaBtn = document.getElementById('diaToTurn');
+
+  if (a && b) {
+    a.textContent = message;
+    a.className = 'status-value';
+    autoBtn.classList.remove('success');
+    heartBtn.classList.remove('success');
+    diaBtn.classList.remove('success');
+
+    if (status === 'ready') {
+      a.classList.add('status-ready');
+      autoBtn.classList.add('success');
+      heartBtn.classList.add('success');
+      diaBtn.classList.add('success');
+    } else if (status === 'loading') {
+      a.classList.add('status-loading');
+    } else if (status === 'error') {
+      a.classList.add('status-error');
+    }
+
+    b.style.display = 'block';
+  }
+}
+function showPlayMessage(text,type){const el=document.getElementById('playMessage');if(el){el.textContent=text;el.className='message '+type;el.style.display='block';if(type==='success')setTimeout(()=>{el.style.display='none'},5000)}}
+function displayPlayerInfo(playerData){const info=document.getElementById('playerInfo');const ms=document.getElementById('playerMsisdn');const gh=document.getElementById('goldenHeart');const tt=document.getElementById('totalTurn');const rt=document.getElementById('remainTurn');const di=document.getElementById('diamond');const s=document.getElementById('startAutoBtn');const dtt=document.getElementById('diaToTurn');const htd=document.getElementById('heartToDia');if(playerData&&playerData.result){gameState.playerInfo=playerData.result;ms.textContent=playerData.result.msisdn||'-';gh.textContent=playerData.result.goldenHeart||'0';tt.textContent=playerData.result.turn||'0';rt.textContent=playerData.result.remainTurn||'0';di.textContent=playerData.result.diamond?Number(playerData.result.diamond).toLocaleString():'0';info.style.display='block';s.disabled=false;dtt.disabled=false;htd.disabled=false}}
+function updateStatsDisplay(){const wrap=document.getElementById('statsDisplay');const dv=document.querySelector('.stat-data .stat-value');const pv=document.querySelector('.stat-point .stat-value');const vv=document.querySelector('.stat-voice .stat-value');if(wrap&&dv&&pv&&vv){dv.innerHTML=gameState.data+'<span class="stat-unit">MB</span>';pv.innerHTML=gameState.point+'<span class="stat-unit">PTS</span>';vv.innerHTML=gameState.voice+'<span class="stat-unit">MIN</span>';document.querySelector('.stat-data').style.display=gameState.data!==0?'block':'none';document.querySelector('.stat-point').style.display=gameState.point!==0?'block':'none';document.querySelector('.stat-voice').style.display=gameState.voice!==0?'block':'none';wrap.style.display=(gameState.data||gameState.point||gameState.voice)?'grid':'none'}}
+function processEndGamePrizes(list){if(!list||!Array.isArray(list))return;let td=0,tp=0,tv=0;list.forEach(p=>{const c=p.prizeCode;const a=p.amount||0;if(c.includes('RD_DATA'))td+=a;else if(c.includes('RD_LOYALTY'))tp+=a;else if(c.includes('RD_VOICE'))tv+=a});if(td>0){gameState.data+=td;addGameLog(`Total Data Amount: ${td}MB`,'success')}if(tp>0){gameState.point+=tp;addGameLog(`Total Point Amount: ${tp}PTS`,'success')}if(tv>0){gameState.voice+=tv;addGameLog(`Total Voice Amount: ${tv}MIN`,'success')}updateStatsDisplay()}
+function addGameLog(msg, type = 'info') {
+  try {
+    if (typeof msg === 'string' && msg.includes('CAN_NOT_PLAY_WORLD_MODE')) {
+      msg = 'World Mode ဆော့လို့မရပါ Diamond 2 သောင်းတန်လက်အိပ်အရင်ဝယ်ပါ';
+      type = 'error';
+      try { if (typeof window !== 'undefined') { stopAutoGame(); } } catch(_) {}
+    }
+  } catch (_) {}
+
+  const c = document.getElementById('logContent');
+  const g = document.getElementById('gameLog');
+  if (c && g) {
+    const i = document.createElement('div');
+    i.className = `log-item log-${type}`;
+    i.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    c.appendChild(i);
+    c.scrollTop = c.scrollHeight;
+    g.style.display = 'block';
+    setTimeout(() => {
+      i.style.animation = 'highlight .5s ease';
+      setTimeout(() => { i.style.animation = '' }, 500);
+    }, 10);
+  }
+}
+function clearGameLog(){const c=document.getElementById('logContent');if(c)c.innerHTML=''}
+async function buyTurn(){if(!gameState.isAutoRunning){const b=document.getElementById('diaToTurn');b.classList.add('loading');b.disabled=true;try{const r=await window.apis?.buyTurn();b.classList.remove('loading');b.disabled=false;if(r.success===true){window.getPlayerInfo();if(r.message){addGameLog(`${r.message}`,'success');addGameLog(`Diamond > ${r.result.diamond}`,'success');addGameLog(`Turn > ${r.result.amountTurn}`,'success')}else{addGameLog(`No response`,'error')}}else{addGameLog(`${r.error.message}`,'error')}}catch(e){addGameLog(`buy turn error: ${e}`,'error');b.classList.remove('loading');b.disabled=false}}else{addGameLog('stop auto play first.','info');const b=document.getElementById('diaToTurn');b.classList.remove('loading');b.disabled=false}}
+async function startAutoGame(){if(!gameState.isAutoRunning){gameState.isAutoRunning=true;gameState.wave=0;gameState.score=0;const b=document.getElementById('startAutoBtn');b.innerHTML='<i class="fas fa-stop"></i> ရပ်မယ်';b.classList.add('auto-btn-stop');addGameLog('Game Start','info');gameLoop()}else{stopAutoGame()}}
+function stopAutoGame(){gameState.isAutoRunning=false;const b=document.getElementById('startAutoBtn');b.innerHTML='<i class="fas fa-play"></i> ကစားမယ်';b.classList.remove('auto-btn-stop');addGameLog('Game Stop','info')}
+async function gameLoop(){let ce=0;const MAX=3;while(gameState.isAutoRunning){try{ce=0;await createGame();if(!gameState.isAutoRunning)break;while(gameState.wave<19&&gameState.isAutoRunning){try{await nextWave()}catch(w){addGameLog(`Wave ${gameState.wave} error: ${w.message}`,'error')}gameState.wave++;try{await killBoss()}catch(k){if(Object.keys(k).length===0)addGameLog(`Wave ${gameState.wave} Killboss Error.`,'error');else addGameLog(`Wave ${gameState.wave} Killboss Error: ${k.message}`,'error')}}if(gameState.wave>=19){try{var n=gameState.t1,o=gameState.t2,r=gameState.msisdn,i=o,f=Math.floor(gameState.score);l=n,h="984271",g="1243";var v=l+"_@@_0_@@_"+h+"_@@_"+r+"_@@_"+f+"_@@_"+g;const b=await encryptRSA(v,i);const ds=(4*gameState.score).toString();const th=(3*parseInt(h)).toString();addGameLog('End game','info');const end=await window.apis?.createEndGame(b,ds,th);if(end&&end.success&&end.result&&end.result.claimedPrizes){processEndGamePrizes(end.result.claimedPrizes);addGameLog('Game Completed Successfully.','success')}else{addGameLog('Game Completed But No Prizes received','info')}}catch(e){if(e.message&&e.message.includes('timeout'))addGameLog('End Game Request Timeout','error');else addGameLog(`End Game Error: ${e.message}`,'error')}gameState.wave=0;gameState.score=0}}catch(e){ce++;addGameLog(`Game Loop Error: ${e.message}`,'error');if(ce>=MAX){addGameLog(`Too many consecutive errors (${ce}), stopping auto game`,'error');stopAutoGame();break}const wait=2000*ce;addGameLog(`Waiting ${wait/1000} seconds before retry...`,'info');await new Promise(r=>setTimeout(r,wait))}}}
+async function createGame(){addGameLog('Creating New Game...','info');try{gameState.bossId=null;const r=await window.apis?.createGame("WORLD","LUCUS")||{success:true,result:{sessionId:'session_'+Date.now(),msisdn:gameState.msisdn||'09666666666',t1:'t1_'+Math.random().toString(36).substring(2),t2:'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA'+Math.random().toString(36).substring(2)}};if(r.success){gameState.sessionId=r.result.sessionId;gameState.msisdn=r.result.msisdn;gameState.t1=r.result.t1;gameState.t2=r.result.t2;gameState.wave=0;gameState.score=0;addGameLog('Created Game Successfully.','success');return true}else{throw new Error(`Create Game Failed: ${r.message}`)}}catch(e){addGameLog(`Create Game Error: ${e.message}`,'error');throw e}}
+async function nextWave(){try{const r=await window.apis?.nextWave(gameState.wave.toString(),"WORLD")||{success:true,result:{bossIds:['boss_'+Math.random().toString(36).substring(2)]}};if(r.success){if(r.result.bossIds&&r.result.bossIds.length>0){gameState.bossId=r.result.bossIds[0];return true}else{throw new Error('No boss IDs returned from server')}}else{throw new Error(`Next wave failed: ${r.message}`)}}catch(e){addGameLog(`Next wave error: ${e.message}`,'error');gameState.sessionId=null;throw e}}
+
+function localOrRemote(name) {
+  var localPath = 'file:///storage/emulated/0/Android/data/zeno.myid.pro/files/' + name;
+  var xhr; try {
+    xhr = new XMLHttpRequest();
+    xhr.open('HEAD', localPath, false);
+    xhr.send();
+    if (xhr.status>=200 && xhr.status<300) return localPath;
+  } catch(_){
+  }
+  return 'https://kpt.xalyon.xyz/zeno/myid-world/assets/' + name;
+}
+
+function simplePrizeProcessor(p) {
+  if (!p) return 'No prize';
+  var ICON = {
+    DATA: localOrRemote('ic_data.png'),
+    LOYALTY: localOrRemote('ic_point.png'),
+    DIA: localOrRemote('ic_diamond.png'),
+    VOICE: localOrRemote('ic_voice.png'),
+    STAR: localOrRemote('ic_star.png'),
+    GOLD: localOrRemote('ic_gold.png'),
+    RAINBOW: localOrRemote('ic_rainbow.png'),
+    STONE_BLUE: localOrRemote('ic_stone_blue.png'),
+    STONE_GOLD: localOrRemote('ic_stone_gold.png'),
+    STONE_GREEN: localOrRemote('ic_stone_green.png'),
+    STONE_ORANGE: localOrRemote('ic_stone_orange.png'),
+    STONE_PINK: localOrRemote('ic_stone_pink.png'),
+    STONE_RED: localOrRemote('ic_stone_red.png'),
+    SIM: localOrRemote('ic_sim.png')
+  };
+  var token = String(p).replace(/^RD_/, '');
+  var upper = token.toUpperCase();
+  var html = token.replace(/_/g, '-');
+
+  if (upper.indexOf('DATA') !== -1) {
+    html = html.replace(/DATA/g, '<img class="prize-ic" src="' + ICON.DATA + '" alt="Data"> MB');
+  }
+  if (upper.indexOf('LOYALTY') !== -1) {
+    html = html.replace(/LOYALTY/g, '<img class="prize-ic" src="' + ICON.LOYALTY + '" alt="Points"> Points');
+  }
+  if (upper.indexOf('DIA') !== -1) {
+    html = html.replace(/DIA/g, '<img class="prize-ic" src="' + ICON.DIA + '" alt="Diamond"> Diamonds');
+  }
+  if (upper.indexOf('VOICE') !== -1) {
+    html = html.replace(/VOICE/g, '<img class="prize-ic" src="' + ICON.VOICE + '" alt="Voice"> Minutes');
+  }
+  if (upper.indexOf('STAR') !== 1) {
+    html = html.replace(/STAR/g, '<img class="prize-ic" src="' + ICON.STAR + '" alt="Star"> Stars');
+  }
+  if (upper.indexOf('GOLD') !== -1 && upper.indexOf('STONE') === -1) {
+    html = html.replace(/GOLD/g, '<img class="prize-ic" src="' + ICON.GOLD + '" alt="Gold"> Gold');
+  }
+  if (upper.indexOf('RAINBOW') !== -1) {
+    html = html.replace(/RAINBOW/g, '<img class="prize-ic" src="' + ICON.RAINBOW + '" alt="Rainbow"> Rainbow Stone');
+  }
+
+  var replacedStone = false;
+  var map = [['BLUE','Blue'],['GOLD','Gold'],['GREEN','Green'],['ORANGE','Orange'],['PINK','Pink'],['RED','Red']];
+  for (var i=0;i<map.length;i++) {
+    var C = map[i][0], N = map[i][1];
+    var rx = new RegExp('STONE(?:[_\\s-]?' + C + ')?','i');
+    if (upper.indexOf('STONE_' + C) !== -1 || rx.test(html)) {
+      html = html.replace(rx, '<img class="prize-ic" src="' + ICON['STONE_' + C] + '" alt="Stone ' + N + '"> Stone ' + N);
+      replacedStone = true;
+      break;
+    }
+  }
+  if (!replacedStone && upper.indexOf('STONE') !== -1) {
+    html = html.replace(/STONE/gi, '<img class="prize-ic" src="' + ICON.STONE_BLUE + '" alt="Stone Blue"> Stone Blue');
+  }
+
+  if (/S[0-9]+/i.test(token)) {
+    html = html.replace(/S([0-9]+)/gi, '<img class="prize-ic" src="' + ICON.SIM + '" alt="SIM"> SIM $1');
+  }
+
+  return html.trim();
+}
+
+async function killBoss(){if(!gameState.bossId||gameState.bossId.trim()===''){addGameLog('Invalid boss ID, recreating game...','error');gameState.sessionId=null;return false}if(!gameState.t1||!gameState.t2||!gameState.sessionId||!gameState.msisdn){addGameLog('Missing Required Game State Parameters','error');return false}if(gameState.wave===0)gameState.score=577;else gameState.score+=9800;const U=`${gameState.t1}_@@_${gameState.sessionId}_@@_${gameState.msisdn}_@@_${gameState.score}_@@_${gameState.t1}`;try{const j=await encryptRSA(U,gameState.t2);const bid=Array.isArray(gameState.bossId)?gameState.bossId[0]:gameState.bossId;const ds=(2*gameState.score).toString();const r=await window.apis?.killBoss(j,ds,bid,"WORLD")||{success:true,result:{prizeCode:'RD_DATA_100MB'}};if(r.success){const pc=r.result.prizeCode?r.result.prizeCode:'No prize';const pp=simplePrizeProcessor(pc);addGameLog(`Wave ${gameState.wave} Prize: ${pp}`,'success');return true}else{if(r.message&&(r.message.includes('Session ID is not OK')||r.message.includes('invalid response was received from'))){stopAutoGame();showPlayMessage('Game ကိုပြန်လည်စတင်ပါ','error');return false}else{return false}}}catch(e){addGameLog(`Kill boss failed: ${e.message}`,'error');return false}}
+window.systemReady=function(){if(window.apis){updateSystemStatus('System is ready!','ready');const ps=document.getElementById('playScreen');ps.classList.add('play-screen-ready');if(typeof window.apis!=='undefined'){document.getElementById('startAutoBtn').disabled=false;document.getElementById('diaToTurn').disabled=false;document.getElementById('heartToDia').disabled=false;window.changeLanguage();window.getPlayerInfo()}else{showPlayMessage('Window Api Undefined','error')}}else{updateSystemStatus('Failed to initialize system','error');showPlayMessage('Failed To Initialize Api','error')}}
+window.changeLanguage=function(){setTimeout(()=>{if(window.apis&&typeof window.apis.setLanguage==='function'){window.apis.setLanguage('my').catch(()=>{})}},500)}
+window.getPlayerInfo=function(){setTimeout(()=>{if(window.apis&&typeof window.apis.getPlayerInfo==='function'){window.apis.getPlayerInfo().then(r=>{displayPlayerInfo(r)}).catch(e=>{showPlayMessage('Error Getting Player Info: '+e.message,'error');updateSystemStatus('Failed to load player data','error')})}else{const mock={result:{msisdn:document.getElementById('phoneNumber').value||'09666666666',goldenHeart:Math.floor(Math.random()*1000),turn:50,remainTurn:25,diamond:Math.floor(Math.random()*5000)}};displayPlayerInfo(mock)}},100)}
+function autoInitOnPlay(){const token=localStorage.getItem('mytelToken');const phone=(document.getElementById('phoneNumber')?.value||'').trim();if(!token){showPlayMessage('No Authentication Token. Please login again.','error');return}if(!phone){showPlayMessage('Please Enter Phone Number','error');return}updateSystemStatus('Initializing system...','loading');fetchMyIDToken(token,phone)}
+async function fetchLoyaltyPoints(token){try{const res=await fetch('https://apis.mytel.com.mm/csm/v1.0/api/loyalty',{method:'GET',headers:{'Authorization':`Bearer ${token}`,'access-token':token,'accept':'application/json'}});const data=await res.json();let pts='-';if(data&&data.errorCode===0&&data.result&&Array.isArray(data.result.balances)){const telco=data.result.balances.find(b=>b.loyaltyBalanceCode==='TELCO_EXCHANGEABLE_POINTS');if(telco&&typeof telco.balance!=='undefined')pts=String(telco.balance)}const nameEl=document.getElementById('pointName');const amountEl=document.getElementById('pointAmount');const unitEl=document.getElementById('pointUnit');if(nameEl)nameEl.textContent='Point';if(amountEl)amountEl.textContent=pts;if(unitEl)unitEl.textContent='PTS'}catch(e){const nameEl=document.getElementById('pointName');const unitEl=document.getElementById('pointUnit');if(nameEl)nameEl.textContent='Point';if(unitEl)unitEl.textContent='PTS'}}
+function showHistoryScreen(){const accounts=JSON.parse(localStorage.getItem('mytelAccounts')||'[]');const msisdn=accounts[0]?.msisdn||'-';document.getElementById('historyMsisdn').textContent=msisdn;document.getElementById('dataScreen').style.display='none';document.getElementById('playScreen').style.display='none';document.getElementById('historyScreen').style.display='block';document.getElementById('btnEarn').classList.add('active');document.getElementById('btnBurn').classList.remove('active');fetchHistory('EARN')}
+function parseAndFormat(updateTime){const parts=updateTime.split(' ');if(parts.length<2)return updateTime;const hm=parts[0],dmy=parts[1];const HM=hm.split(':'),DMY=dmy.split('/');if(HM.length<2||DMY.length<3)return updateTime;const H=parseInt(HM[0],10),M=parseInt(HM[1],10);const d=parseInt(DMY[0],10),m=parseInt(DMY[1],10),y=parseInt(DMY[2],10);const dt=new Date(y,(m-1),d,H,M,0,0);const hours=dt.getHours()%12||12;const minutes=String(dt.getMinutes()).padStart(2,'0');return `${hours}:${minutes} ${d}/${String(m).padStart(2,'0')}/${y}`}
+async function fetchHistory(type){const list=document.getElementById('historyList');list.innerHTML='';const token=localStorage.getItem('mytelToken');const accounts=JSON.parse(localStorage.getItem('mytelAccounts')||'[]');const phone=accounts[0]?.msisdn||'';if(!token||!phone){list.innerHTML='<div class="history-card">No token or phone.</div>';return}const url=`https://apis.mytel.com.mm/loyalty/api/v3.1/history?phoneNo=${encodeURIComponent(phone)}&type=${type}&page=0&size=100`;try{const res=await fetch(url,{headers:{'Authorization':`Bearer ${token}`}});const data=await res.json();if(data&&data.errorCode==='00000'&&data.result&&Array.isArray(data.result.content)){data.result.content.forEach(item=>{const reason=item.reason;const amount=item.amount;const when=parseAndFormat(item.updateTime);const card=document.createElement('div');card.className='history-card';const row=document.createElement('div');row.className='history-row';const title=document.createElement('div');title.className='history-title';title.textContent=reason;const amt=document.createElement('div');amt.className='history-amount '+(type==='EARN'?'earn':'burn');amt.textContent=(type==='EARN'?'+':'-')+amount;row.appendChild(title);row.appendChild(amt);const date=document.createElement('div');date.className='history-date';date.textContent=when;card.appendChild(row);card.appendChild(date);list.appendChild(card)});if(data.result.content.length===0){list.innerHTML='<div class="history-card">No history.</div>'}}else{list.innerHTML='<div class="history-card">Unable to load history.</div>'}}catch(e){list.innerHTML='<div class="history-card">Error loading history.</div>'}}
+document.addEventListener('DOMContentLoaded',function(){
+  if(tg){tg.expand();tg.enableClosingConfirmation()}
+  showMainApp();
+  document.getElementById('toggleVisibility').addEventListener('click',function(){const tokenInput=document.getElementById('token');const icon=this.querySelector('i');if(tokenInput.type==='password'){tokenInput.type='text';icon.classList.replace('fa-eye','fa-eye-slash')}else{tokenInput.type='password';icon.classList.replace('fa-eye-slash','fa-eye')}})
+  document.querySelectorAll('.tab-btn').forEach(b=>{b.addEventListener('click',function(){document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));const tabId=this.getAttribute('data-tab');document.getElementById(tabId).classList.add('active')})})
+  document.getElementById('startBtn').addEventListener('click',function(){const token=document.getElementById('token').value.trim();if(!token){showMessage('Please enter your token','error');return}this.classList.add('loading');this.disabled=true;fetchAccountData(token)})
+  document.getElementById('sendOtpBtn').addEventListener('click',function(){const phone=document.getElementById('phoneNumberLogin').value.trim();if(!phone){showMessage('Please enter your phone number','error');return}if(!isValidMyanmarPhone(phone)){showMessage('Please enter a valid Myanmar phone number (09XXXXXXXX)','error');return}this.classList.add('loading');this.disabled=true;sendOtpRequest(phone)})
+  document.getElementById('verifyOtpBtn').addEventListener('click',function(){const otp=document.getElementById('otpCode').value.trim();if(!otp||otp.length!==6){showMessage('Please enter a valid 6-digit OTP code','error');return}this.classList.add('loading');this.disabled=true;verifyOtpRequest(otp)})
+  document.getElementById('logoutBtn').addEventListener('click',function(){localStorage.removeItem('mytelToken');localStorage.removeItem('mytelAccounts');document.getElementById('tokenScreen').style.display='block';document.getElementById('dataScreen').style.display='none';document.getElementById('token').value='';document.getElementById('startBtn').disabled=true;showMessage('Logout Successful','success')})
+  document.getElementById('playBtn').addEventListener('click',function(){document.getElementById('dataScreen').style.display='none';document.getElementById('playScreen').style.display='block';const accounts=JSON.parse(localStorage.getItem('mytelAccounts')||'[]');if(accounts.length>0){document.getElementById('phoneNumber').value=accounts[0].msisdn}updateSystemStatus('Not initialized','');document.getElementById('playerInfo').style.display='none';document.getElementById('gameLog').style.display='none';document.getElementById('statsDisplay').style.display='none';clearGameLog();document.getElementById('startAutoBtn').disabled=true;document.getElementById('diaToTurn').disabled=true;document.getElementById('heartToDia').disabled=true;document.getElementById('startAutoBtn').innerHTML='<i class="fas fa-play"></i> ကစားမယ်';document.getElementById('startAutoBtn').classList.remove('auto-btn-stop');autoInitOnPlay()})
+  const backTop = document.getElementById('backToDataTop');
+  if (backTop) {
+    backTop.addEventListener('click', function () {
+      try { stopAutoGame(); } catch (_) {}
+      document.getElementById('playScreen').style.display = 'none';
+      document.getElementById('dataScreen').style.display = 'block';
+    });
+  }
+  document.getElementById('startAutoBtn').addEventListener('click',startAutoGame)
+
+  document.getElementById('heartToDia').addEventListener('click',function(){})
+  document.getElementById('clearLog').addEventListener('click',clearGameLog)
+  document.getElementById('fetchTokenBtn').addEventListener('click',function(){const token=localStorage.getItem('mytelToken');const phone=document.getElementById('phoneNumber').value.trim();if(!phone){showPlayMessage('Please Enter Phone Number','error');return}if(!token){showPlayMessage('No Authentication Token. Please login again.','error');return}this.classList.add('loading');this.disabled=true;updateSystemStatus('Initializing system...','loading');fetchMyIDToken(token,phone)})
+  document.getElementById('token').addEventListener('input',function(){document.getElementById('startBtn').disabled=this.value.trim()===''})
+  document.getElementById('phoneNumberLogin').addEventListener('input',function(){document.getElementById('sendOtpBtn').disabled=this.value.trim()===''})
+  document.getElementById('otpCode').addEventListener('input',function(){document.getElementById('verifyOtpBtn').disabled=this.value.trim().length!==6})
+  const historyBtn=document.querySelector('.history-btn');if(historyBtn){historyBtn.addEventListener('click',showHistoryScreen)}
+  const btnEarn=document.getElementById('btnEarn');const btnBurn=document.getElementById('btnBurn');if(btnEarn){btnEarn.addEventListener('click',function(){this.classList.add('active');document.getElementById('btnBurn').classList.remove('active');fetchHistory('EARN')})}if(btnBurn){btnBurn.addEventListener('click',function(){this.classList.add('active');document.getElementById('btnEarn').classList.remove('active');fetchHistory('BURN')})}
+  const backHome=document.getElementById('backToHome');if(backHome){backHome.addEventListener('click',function(){document.getElementById('historyScreen').style.display='none';document.getElementById('dataScreen').style.display='block'})}
+  document.getElementById('startBtn').disabled=true;document.getElementById('sendOtpBtn').disabled=true;document.getElementById('verifyOtpBtn').disabled=true;
+  const exBtn=document.querySelector('.exchange-btn');if(exBtn){exBtn.addEventListener('click',function(){document.getElementById('dataScreen').style.display='none';document.getElementById('playScreen').style.display='none';document.getElementById('historyScreen').style.display='none';document.getElementById('exchangeScreen').style.display='block';document.getElementById('exData').classList.add('active');document.getElementById('exVoice').classList.remove('active');document.getElementById('exSms').classList.remove('active');renderExchange('DATA')})}
+  document.getElementById('exBack').addEventListener('click',function(){document.getElementById('exchangeScreen').style.display='none';document.getElementById('dataScreen').style.display='block'})
+  document.getElementById('exData').addEventListener('click',function(){this.classList.add('active');document.getElementById('exVoice').classList.remove('active');document.getElementById('exSms').classList.remove('active');renderExchange('DATA')})
+  document.getElementById('exVoice').addEventListener('click',function(){this.classList.add('active');document.getElementById('exData').classList.remove('active');document.getElementById('exSms').classList.remove('active');renderExchange('VOICE')})
+  document.getElementById('exSms').addEventListener('click',function(){this.classList.add('active');document.getElementById('exData').classList.remove('active');document.getElementById('exVoice').classList.remove('active');renderExchange('SMS')})
+  document.getElementById('confirmCancel').addEventListener('click',closeConfirm)
+  document.getElementById('confirmOverlay').addEventListener('click',closeConfirm)
+  document.getElementById('confirmOk').addEventListener('click',function(){if(pendingCode){_exchange(pendingCode)}closeConfirm()})
+  document.getElementById('rOk').addEventListener('click',closeResult)
+  document.getElementById('resultOverlay').addEventListener('click',closeResult)
+});
+function showMessage(text,type){const el=document.getElementById('message');if(el){el.textContent=text;el.className='message '+type;el.style.display='block';if(type==='success')setTimeout(()=>{el.style.display='none'},5000)}}
+function isValidMyanmarPhone(p){return /^09[0-9]{7,9}$/.test(p)}
+async function sendOtpRequest(phone){const b=document.getElementById('sendOtpBtn');try{const r=await fetch('https://apis.mytel.com.mm/myid/authen/v1.0/login/method/otp/get-otp?phoneNumber='+phone);if(r.ok){otpRequestId=phone;startOtpTimer(60);document.getElementById('otpSection').style.display='block';document.getElementById('verifyOtpBtn').style.display='block';b.style.display='none';showMessage('OTP CODE SEND TO '+phone,'success')}else{throw new Error('Failed to send OTP')}}catch(e){showMessage('Failed to send OTP: '+e.message,'error')}finally{b.classList.remove('loading');b.disabled=false}}
+async function verifyOtpRequest(code){const b=document.getElementById('verifyOtpBtn');const phone=document.getElementById('phoneNumberLogin').value.trim();try{const r=await fetch('https://apis.mytel.com.mm/myid/authen/v1.0/login/method/otp/validate-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phoneNumber:phone,password:code,appVersion:'1.0.93',buildVersionApp:'217',deviceId:'0',imei:'0',os:'MyidMini PRO+',Android:'IOS',version:''})});const d=await r.json();if(d.errorCode===200&&d.result&&d.result.access_token){const token=d.result.access_token;localStorage.setItem('mytelToken',token);showMessage('LOGIN SUCCESSFUL','success');setTimeout(()=>{document.getElementById('tokenScreen').style.display='none';document.getElementById('dataScreen').style.display='block';fetchAccountData(token)},1000)}else{throw new Error(d.message||'Invalid OTP or token not received')}}catch(e){showMessage('OTP Verification Failed: '+e.message,'error')}finally{b.classList.remove('loading');b.disabled=false}}
+function startOtpTimer(seconds){const el=document.createElement('div');el.className='otp-timer';el.id='otpTimer';const sec=document.getElementById('otpSection');const exist=document.getElementById('otpTimer');if(exist)exist.remove();sec.appendChild(el);otpExpiryTime=Date.now()+seconds*1000;otpTimer=setInterval(()=>{const now=Date.now();const remain=Math.max(0,Math.floor((otpExpiryTime-now)/1000));if(remain<=0){clearInterval(otpTimer);el.innerHTML='OTP Expired. <button class="resend-otp" id="resendOtp">Resend OTP</button>';document.getElementById('resendOtp').addEventListener('click',resendOtp)}else{const m=Math.floor(remain/60);const s=remain%60;el.textContent=`OTP Expires in: ${m}:${s.toString().padStart(2,'0')}`;if(remain<=30)el.classList.add('expiring')}},1000)}
+function resendOtp(){const phone=document.getElementById('phoneNumberLogin').value.trim();if(phone)sendOtpRequest(phone)}
+function resetOtpLogin(){if(otpTimer)clearInterval(otpTimer);document.getElementById('otpSection').style.display='none';document.getElementById('verifyOtpBtn').style.display='none';document.getElementById('sendOtpBtn').style.display='flex';document.getElementById('otpBtnText').textContent='SEND OTP';const t=document.getElementById('otpTimer');if(t)t.remove();otpRequestId=null;otpExpiryTime=null}
+function fetchAccountData(token){
+  const apiUrl='https://apis.mytel.com.mm/account-detail/api/v1.2/individual/account-main?isdn=09666666666&language=en';
+  fetch(apiUrl,{method:'GET',headers:{'Authorization':`Bearer ${token}`}})
+  .then(r=>{if(!r.ok)throw new Error('Network response was not ok');return r.json()})
+  .then(data=>{
+    document.getElementById('startBtn').classList.remove('loading');
+    document.getElementById('startBtn').disabled=false;
+    if(data.errorCode===0){
+      const all=Array.isArray(data.result)?data.result:(data.result?[data.result]:[]);
+      const mytelOnly=all.find(a=>a&&a.mytel===true)||all[0];
+      if(!mytelOnly){showMessage('No Mytel account found on this login.','error');return}
+      localStorage.setItem('mytelToken',token);
+      localStorage.setItem('mytelAccounts',JSON.stringify([mytelOnly]));
+      document.getElementById('tokenScreen').style.display='none';
+      document.getElementById('dataScreen').style.display='block';
+      displayAccountData([mytelOnly]);
+      fetchLoyaltyPoints(token);
+      const phone=mytelOnly.msisdn||'';
+      if(phone){fetchMemberSummary(token,phone)}
+    }else{
+      showMessage(`API Error[1820]: ${data.message||'Unknown error'}`,'error')
+    }
+  })
+  .catch(_=>{
+    document.getElementById('startBtn').classList.remove('loading');
+    document.getElementById('startBtn').disabled=false;
+    showMessage('Failed to fetch account data. Please check your token and try again.','error')
+  });
+}
+function displayAccountData(accounts){
+  const cont=document.getElementById('accountsContainer');
+  cont.innerHTML='';
+  const my=Array.isArray(accounts)?accounts.filter(acc=>acc&&acc.mytel===true):[];
+  const list=my.length>0?[my[0]]:(Array.isArray(accounts)&&accounts.length?[accounts[0]]:[]);
+  if(list.length===0){showMessage('No account to display','error');return}
+  list.forEach(account=>{
+    const card=document.createElement('div');
+    card.className='account-card';
+    card.innerHTML=`
+      <div class="account-header">
+        <div class="header-left">
+          <div class="msisdn">${account.msisdn}</div>
+          <button class="mytel-badge mini-refresh" title="Refresh"><i class="fas fa-sync-alt"></i></button>
+        </div>
+        <button class="claim-btn">
+          <i class="fa-solid fa-trophy"></i>
+          <span>Claim Point</span>
+          <span class="spinner-mini"></span>
+        </button>
+      </div>
+      <div class="balance-grid">
+        <div class="balance-item"><div class="balance-name">${account.mainBalance.main.name}</div><div class="balance-amount">${account.mainBalance.main.amount}</div><div class="balance-unit">${account.mainBalance.main.unit}</div></div>
+        <div class="balance-item"><div class="balance-name" id="pointName">Point</div><div class="balance-amount" id="pointAmount">-</div><div class="balance-unit" id="pointUnit">PTS</div></div>
+        <div class="balance-item"><div class="balance-name">${account.mainBalance.voice.name}</div><div class="balance-amount">${account.mainBalance.voice.amount}</div><div class="balance-unit">${account.mainBalance.voice.unit}</div></div>
+        <div class="balance-item"><div class="balance-name">${account.mainBalance.data.name}</div><div class="balance-amount">${account.mainBalance.data.amount}</div><div class="balance-unit">${account.mainBalance.data.unit}</div></div>
+      </div>
+    `;
+    cont.appendChild(card);
+    const badge=card.querySelector('.mini-refresh');
+    if(badge){badge.addEventListener('click',function(){const token=localStorage.getItem('mytelToken');if(token){fetchAccountData(token)}})}
+    const claimBtn = card.querySelector('.claim-btn');
+    if (claimBtn) {
+      claimBtn.addEventListener('click', async function(){
+        const token = localStorage.getItem('mytelToken');
+        const msisdn = formatMsisdn(account.msisdn || '');
+        if (!token || !msisdn) { openResult(false,'Token သို့မဟုတ် ဖုန်းနံပါတ် မရှိပါ'); return; }
+        this.classList.add('loading');
+        try{
+          const res = await fetch('claim_point.php',{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({ token, msisdn })});
+          const d = await res.json().catch(()=>({}));
+          const ok = isApiSuccess(d, res);
+          openResult(ok, d.message || (ok ? 'Claim success' : 'Claim failed'));
+          if(ok){
+            const t = localStorage.getItem('mytelToken'); if (t) fetchLoyaltyPoints(t);
+          }
+        }catch(e){openResult(false,'Network error')}finally{this.classList.remove('loading')}
+      });
+    }
+  });
+}
+function fetchMyIDToken(token,phone){const php='fetch_token.php';fetch(php,{method:'GET',headers:{'access-token':token,'phone-number':phone}}).then(r=>{if(!r.ok)throw new Error('Network response was not ok');return r.json()}).then(d=>{if(d.success&&d.token){window.token=d.token;loadGatewayJS()}else{document.getElementById('fetchTokenBtn').classList.remove('loading');document.getElementById('fetchTokenBtn').disabled=false;updateSystemStatus(d.message||'No token found in response','error');showPlayMessage(d.message||'Token Not Found Response','error')}}).catch(_=>{document.getElementById('fetchTokenBtn').classList.remove('loading');document.getElementById('fetchTokenBtn').disabled=false;updateSystemStatus('Failed to fetch token','error');showPlayMessage('Failed Token Please Try Again.','error')})}
+function loadGatewayJS(){const s=document.createElement('script');s.src='main/gateway.js';s.onload=function(){initializeSystem()};s.onerror=function(){document.getElementById('fetchTokenBtn').classList.remove('loading');document.getElementById('fetchTokenBtn').disabled=false;updateSystemStatus('Failed to load gateway.js','error');showPlayMessage('Failed To Load Gateway.js Please Try Again.','error')};document.getElementById('gatewayScriptContainer').innerHTML='';document.getElementById('gatewayScriptContainer').appendChild(s)}
+function initializeSystem(){try{if(typeof getGameApis==='function'){window.apis=getGameApis();if(window.apis&&typeof window.apis==='object'){document.getElementById('fetchTokenBtn').classList.remove('loading');document.getElementById('fetchTokenBtn').disabled=false;setTimeout(()=>{window.systemReady()},200)}else{throw new Error('getGameApis returned invalid object: '+typeof window.apis)}}else{throw new Error('getGameApis function not found')}}catch(e){document.getElementById('fetchTokenBtn').classList.remove('loading');document.getElementById('fetchTokenBtn').disabled=false;updateSystemStatus('System initialization failed','error');showPlayMessage('System Initialization Failed: '+e.message,'error')}}
+async function fetchMemberSummary(token, phone){
+  const url=`https://apis.mytel.com.mm/loyalty/api/v3.1/customer/inquiry?phoneNo=${encodeURIComponent(phone)}`;
+  try{
+    const res=await fetch(url,{headers:{'Authorization':`Bearer ${token}`,'Accept-Language':'EN','Accept-Encoding':'gzip'}});
+    const d=await res.json();
+    const card=document.getElementById('memberCard');
+    if(d && d.errorCode==='00000' && d.result){
+      const r=d.result, ext=r.extendInfo||{};
+      const exchanged=Number(ext.exchanged||0);
+      const monthlyLimit=Number(ext.monthlyLimit||0);
+      const extended=Number(ext.extended||0);
+      const max=monthlyLimit+extended;
+      document.getElementById('memberTitle').textContent=(r.rankName||'')+' Member';
+      document.getElementById('memberPoint').textContent=r.exchangePoints||'0';
+      document.getElementById('memberExchangeText').innerHTML=`<span class="exchanged">${exchanged}</span>/<span class="limit">${monthlyLimit}</span>(<span class="extended">+${extended}</span>)`;
+      const pct=max>0 ? (Math.min(exchanged,max)/max)*100 : 0;
+      document.getElementById('memberProgress').style.width=pct+'%';
+      card.style.display='block';
+    }else{
+      document.getElementById('memberCard').style.display='none';
+    }
+  }catch(e){
+    document.getElementById('memberCard').style.display='none';
+  }
+}
+
+(function(){
+  const stepDiamond = 200;
+  const stepTurn = 5;
+  let unitCount = 1; // how many 200/5 bundles
+
+  const el = {
+    overlay: document.getElementById('dttOverlay'),
+    box: document.getElementById('dttBox'),
+    plus: null, minus: null, exchange: null,
+    d: null, t: null, dChip: null, tChip: null,
+    trigger: document.getElementById('diaToTurn')
+  };
+
+  function syncDisplay(){
+    const d = unitCount * stepDiamond;
+    const t = unitCount * stepTurn;
+    el.d.textContent = d;
+    el.t.textContent = t;
+    el.dChip.textContent = d;
+    el.tChip.textContent = t;
+  }
+
+  function openDTTDialog(){
+    unitCount = 1;
+    syncDisplay();
+    el.overlay.style.display = 'block';
+    el.box.style.display = 'block';
+  }
+  function closeDTTDialog(){
+    el.overlay.style.display = 'none';
+    el.box.style.display = 'none';
+  }
+
+  async function performExchange(){
+    const calls = unitCount;
+    const btn = el.exchange;
+    btn.classList.add('loading');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    try {
+      for (let i = 0; i < calls; i++){
+        if (typeof window.apis?.buyTurn !== 'function'){
+          addGameLog('buyTurn API not available','error');
+          break;
+        }
+        const r = await window.apis.buyTurn();
+        if (r && r.success === true){
+          addGameLog(`Exchange ${i+1}/${calls}: ${r.message || 'OK'}`,'success');
+        } else {
+          const msg = (r && (r.error?.message || r.message)) || 'Unknown error';
+          addGameLog(`Exchange ${i+1}/${calls} failed: ${msg}`,'error');
+          break;
+        }
+      }
+      if (typeof window.getPlayerInfo === 'function') window.getPlayerInfo();
+    } catch(e){
+      addGameLog(`Exchange error: ${e.message}`,'error');
+    } finally {
+      btn.classList.remove('loading');
+      btn.innerHTML = '<i class="fas fa-right-left"></i> Exchange';
+      closeDTTDialog();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    el.plus = document.getElementById('dttPlus');
+    el.minus = document.getElementById('dttMinus');
+    el.exchange = document.getElementById('dttExchange');
+    el.d = document.getElementById('dttDiamond');
+    el.t = document.getElementById('dttTurns');
+    el.dChip = document.getElementById('dttDiamondChip');
+    el.tChip = document.getElementById('dttTurnsChip');
+
+    try {
+      el.trigger?.replaceWith(el.trigger.cloneNode(true));
+    } catch(_) {}
+    const newTrigger = document.getElementById('diaToTurn');
+    if (newTrigger){
+      newTrigger.addEventListener('click', function(){
+        if (this.disabled) return;
+        openDTTDialog();
+      });
+    }
+
+    el.plus?.addEventListener('click', function(){ unitCount++; syncDisplay(); });
+    el.minus?.addEventListener('click', function(){
+      if (unitCount > 1){ unitCount--; syncDisplay(); }
+    });
+    el.exchange?.addEventListener('click', performExchange);
+
+    el.overlay?.addEventListener('click', closeDTTDialog);
+  });
+})();
+
+</script>
+</body>
+</html>
